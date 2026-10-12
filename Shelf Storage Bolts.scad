@@ -7,8 +7,10 @@ $slop = 0.15;
 INCH = 25.4;
 TOLERANCE = 0.005;
 
+// Home Depot HDX Plastic Storage Shelf
 shelf_height = 60;
 post_diameter = 38;
+id_letter = "A";
 
 // cyl(h=5, r=post_diameter/2-2.5, r2=post_diameter/2, anchor=BOTTOM) position(TOP)
 // cyl(h=5, r=post_diameter/2, anchor=BOTTOM) position(TOP)
@@ -16,7 +18,9 @@ post_diameter = 38;
 module head() {
     difference() {
         cyl(h=6, r=post_diameter/2, r2=post_diameter/2+10, anchor=BOTTOM) position(TOP) cyl(h=3, r=post_diameter/2+10, anchor=BOTTOM);
-        for(theta = [0, 120, 240]) rotate([0,0,theta]) translate([0, post_diameter+15, -TOLERANCE]) cyl(h=9+2*TOLERANCE, r=post_diameter/2+10, anchor=BOTTOM);
+        up(TOLERANCE) back(5) rotate([0,180,0]) linear_extrude(height = 0.5) text(id_letter, halign="center", valign="bottom");
+        rotate([0,90,90]) cyl(h=2, d=30);
+        //for(theta = [0, 120, 240]) rotate([0,0,theta]) translate([0, post_diameter+15, -TOLERANCE]) cyl(h=9+2*TOLERANCE, r=post_diameter/2+10, anchor=BOTTOM);
     }
     hide_this() cyl(h=9, r=1, anchor=BOTTOM) children();
 }
@@ -29,7 +33,10 @@ module collar(h=shelf_height, r=post_diameter/2, r2=post_diameter/2) {
 module thread(h=shelf_height/2, internal) {
     intersection() {
         collar(h=h, r=post_diameter/2+TOLERANCE, r2=post_diameter/2+TOLERANCE);
-        threaded_rod(d=post_diameter-5, h=h-(internal ? 0 : 2), internal=internal, pitch=4, end_len2=shelf_height/6, bevel1=!internal, bevel2=internal?5:-5, anchor=BOTTOM);
+        difference() {
+            threaded_rod(d=post_diameter-5, h=h-(internal ? 0 : 2), internal=internal, pitch=4, end_len2=shelf_height/6, bevel1=!internal, bevel2=internal?5:-5, anchor=BOTTOM);
+            up(TOLERANCE) rotate([0,180,0]) linear_extrude(height = 0.5) text(id_letter, halign="center", valign="center");
+        }
     }
     hide_this() collar(h=h-(internal ? 0 : 2)) children();
 }
